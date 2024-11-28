@@ -8,15 +8,18 @@ use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class VerifyEmailController extends Controller
 {
     /**
      * Mark the authenticated user's email address as verified.
      */
-    public function __invoke(EmailVerificationRequest $request): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
-
+        if ($request->user()->hasVerifiedEmail()) {
+            return response()->json(['message' => 'Email already verified.'], 409);
+        }
         $attribute = $request->validate([
             'otp' => ['required'],
         ]);
