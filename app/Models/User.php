@@ -23,6 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'otp',
         'otp_expires_at',
+        'google_id',
     ];
 
     /**
