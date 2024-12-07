@@ -31,6 +31,10 @@ class EmailVerificationNotificationController extends Controller
         if ($request->user()->hasVerifiedEmail()) {
             return response()->json(['message' => 'Email already verified.'], 409);
         }
+        if($request->email !== $request->user()->email)
+        {
+            return response()->json('Unauthorized',403);
+        }
         $otp = rand(100000, 999999); // email verification otp random generator
         $user = $request->user();
         $otp_expires = Carbon::now()->addMinutes(10);
