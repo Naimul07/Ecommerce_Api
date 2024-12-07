@@ -23,6 +23,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'otp',
         'otp_expires_at',
+        'phone',
+        'avatar',
         'google_id',
         'email_verified_at',
     ];
@@ -51,5 +53,22 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function orders(){
+        return $this->hasMany(Order::class);
+    }
+
+    public function address(){
+        return $this->hasMany(Address::class);
+    }
+    public function reviews(){
+        return $this->hasMany(Review::class);
+    }
+    public function carts(){
+        return $this->hasMany(Cart::class);
+    }
+    public function wishlist(){
+        return $this->hasMany(Wishlist::class);
     }
 }
