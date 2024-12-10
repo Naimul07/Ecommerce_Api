@@ -8,6 +8,15 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+
+   /*  
+    GET|HEAD        api/admin/category .................. category.index › CategoryController@index 
+    POST            api/admin/category .................. category.store › CategoryController@store 
+    GET|HEAD        api/admin/category/{category} ......... category.show › CategoryController@show 
+    PUT|PATCH       api/admin/category/{category} ..... category.update › CategoryController@update 
+    DELETE          api/admin/category/{category} ... category.destroy › CategoryController@destroy
+    */
+   
     public function index() : JsonResponse {
         $category = Category::all();
         return response()->json($category);
