@@ -11,10 +11,20 @@ use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+
+/*     
+  GET|HEAD        api/order ............................ order.index › OrderController@index 
+  POST            api/order ............................ order.store › OrderController@store 
+  GET|HEAD        api/order/{order} ...................... order.show › OrderController@show 
+  PUT|PATCH       api/order/{order} .................. order.update › OrderController@update 
+  DELETE          api/order/{order} ................ order.destroy › OrderController@destroy 
+
+ */
+
     public function index() {
 
         //need to implement logic only unpaid orders
-        $orders = Order::where('user_id', Auth::id())->latest()->get();
+        $orders = Order::with('orderItems.product')->where('user_id', Auth::id())->latest()->get();
         return response()->json($orders, 200);
 
     }
@@ -25,19 +35,21 @@ class OrderController extends Controller
             'order_items.*.quantity'=>['required','integer','min:1']
             
         ]);
-
+        
         DB::beginTransaction();
 
         try{
             $totalPrice = 0;
             foreach ($attribute['order_items'] as $item) {
                 $product = Product::findOrFail($item['product_id']);
+                // dd($product);
                 /* if ($item['quantity'] > $product->stock_quantity) {
                     throw new \Exception("Insufficient stock for product: {$product->name}");
                 } */
-               $totalPrice += $product->price * $item['quantity'];
+               $totalPrice += $product->price* $item['quantity'];
                 
             }
+            // dd($totalPrice);
             $order = Order::create([
                 'user_id'=> Auth::id(),
                 'total_price'=>$totalPrice,
@@ -71,7 +83,7 @@ class OrderController extends Controller
 
     }
     public function show($id) {
-       $order = Order::with('orderItems')->findOrFail($id);
+       $order = Order::with('orderItems.product')->findOrFail($id);
        return response()->json($order);
 
     }

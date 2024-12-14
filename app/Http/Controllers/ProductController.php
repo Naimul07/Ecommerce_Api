@@ -60,7 +60,7 @@ class ProductController extends Controller
         return response()->json($product,201);
     }
 
-    public function delete($id):JsonResponse{
+    public function destroy($id):JsonResponse{
         $product = Product::findOrFail($id);
         $product->delete();
         return response()->json([

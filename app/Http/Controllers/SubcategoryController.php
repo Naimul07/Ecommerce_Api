@@ -9,6 +9,14 @@ use Illuminate\Http\JsonResponse;
 class SubcategoryController extends Controller
 {
     //
+/* 
+  GET|HEAD        api/admin/sub-category ................. sub-category.index › SubcategoryController@index  
+  POST            api/admin/sub-category ................. sub-category.store › SubcategoryController@store
+  GET|HEAD        api/admin/sub-category/{sub_category} .... sub-category.show › SubcategoryController@show  
+  PUT|PATCH       api/admin/sub-category/{sub_category}  sub-category.update › SubcategoryController@update  
+  DELETE          api/admin/sub-category/{sub_category} ........ sub-category.destroy › SubcategoryController@destroy
+ */
+
     public function index() : JsonResponse {
         $subcategory= Subcategory::all();
         return response()->json($subcategory);
@@ -17,7 +25,7 @@ class SubcategoryController extends Controller
         $attribute = $request->validate([
             'name'=>['required'],
             'description'=>['string','nullable'],
-            'category_id' =>['required'],
+            'category_id' =>['required','exists:categories,id'],
         ]);
         $subcategory = Subcategory::create($attribute);
         return response()->json([
@@ -35,7 +43,7 @@ class SubcategoryController extends Controller
         $attribute = $request->validate([
             'name'=>['required'],
             'description'=>['string','nullable'],
-            'category_id' =>['required'],
+            'category_id' =>['required','exists:categories,id'],
 
         ]);
         $subcategory->update($attribute);
